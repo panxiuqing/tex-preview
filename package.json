@@ -1,8 +1,13 @@
 {
   "name": "tex-preview",
+  "publisher": "tialki",
   "displayName": "Tex Preview",
   "description": "tex quick preview",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panxiuqing/tex-preview"
+  },
   "engines": {
     "vscode": "^1.57.0"
   },
