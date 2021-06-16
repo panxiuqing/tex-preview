@@ -3,7 +3,8 @@
   "publisher": "tialki",
   "displayName": "Tex Preview",
   "description": "tex quick preview",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "icon": "icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/panxiuqing/tex-preview"
@@ -15,13 +16,13 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:tex-preview.helloWorld"
+    "onCommand:tex-preview.active"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "tex-preview.helloWorld",
+        "command": "tex-preview.active",
         "title": "Tex Preview"
       }
     ]
