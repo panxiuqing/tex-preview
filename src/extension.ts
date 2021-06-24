@@ -1,14 +1,15 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as vscode from "vscode";
-import * as path from "path";
-import { spawn } from "child_process";
-import * as fs from "fs";
+import * as vscode from 'vscode';
+import * as path from 'path';
+import { spawn } from 'child_process';
+import * as fs from 'fs';
+import { autoChooseEngine } from './root';
 
 function isTex(document: vscode.TextDocument) {
   const extname = path.extname(document.fileName);
   return (
-    document.languageId === "tex" || extname === ".ltx" || extname === ".tex"
+    document.languageId === 'tex' || extname === '.ltx' || extname === '.tex'
   );
 }
 
@@ -22,10 +23,10 @@ export function activate(context: vscode.ExtensionContext) {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand("tex-preview.active", () => {
+  let disposable = vscode.commands.registerCommand('tex-preview.active', () => {
     // The code you place here will be executed every time your command is executed
     // Display a message box to the user
-    vscode.window.showInformationMessage("Tex Preview Active!");
+    vscode.window.showInformationMessage('Tex Preview Active!');
   });
 
   context.subscriptions.push(disposable);
@@ -51,7 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
     let line = 0;
     while (
       document.getText(new vscode.Range(line, 0, line + 1, 0)) !==
-      "\\begin{document}\n"
+      '\\begin{document}\n'
     ) {
       line += 1;
     }
@@ -100,7 +101,8 @@ export function activate(context: vscode.ExtensionContext) {
 
         const liveText = `${header}\n${changedBlock}\n\\end{document}\n`;
 
-        console.log("liveBlock: ", liveText);
+        console.log('liveBlock: ', liveText);
+        const engine = autoChooseEngine(liveText);
 
         start = new vscode.Position(Infinity, Infinity);
         end = new vscode.Position(0, 0);
@@ -108,15 +110,15 @@ export function activate(context: vscode.ExtensionContext) {
         const basename = `live.${path.basename(event.document.fileName)}`;
         fs.writeFileSync(basename, liveText);
 
-        const ps = spawn("xelatex", [basename]);
+        const ps = spawn(engine, [basename]);
 
-        ps.stdout.on("data", (data) => {
+        ps.stdout.on('data', (data) => {
           console.log(`${data}`);
         });
-        ps.stderr.on("data", (data) => {
+        ps.stderr.on('data', (data) => {
           console.log(`stderr: ${data}`);
         });
-        ps.on("close", (code) => {
+        ps.on('close', (code) => {
           busy = false;
           console.log(`child process exited with code ${code}`);
         });
