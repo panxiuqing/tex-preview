@@ -8,13 +8,7 @@ const section = /\\section\{.*\}/;
 const chapter = /\\chapter\{.*\}/;
 const part = /\\part\{.*\}/;
 
-const article = [
-  subparagraph,
-  paragraph,
-  subsubsection,
-  subsubsection,
-  section,
-];
+const article = [subparagraph, paragraph, subsubsection, subsection, section];
 
 const report = [...article, chapter];
 
@@ -33,5 +27,10 @@ export function getMinimalBlock(
   type: 'article'
 ) {
   const documentType = documentTypes[type];
-  while (true) {}
+  const stack = [];
+  while (true) {
+    if (document.lineAt(startLine).text.startsWith('\\begin')) {
+      stack.push(startLine);
+    }
+  }
 }
