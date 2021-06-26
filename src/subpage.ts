@@ -13,7 +13,7 @@ export function getRootFileText(document: TextDocument) {
   const firstLine = getFirstLine(document);
   const rootFilePath = parseRootFile(firstLine);
   if (!rootFilePath) {
-    return '';
+    return document.getText();
   }
   return getFileText(path.join(process.cwd(), rootFilePath));
 }

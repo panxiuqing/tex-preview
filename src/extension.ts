@@ -4,7 +4,9 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { spawn } from 'child_process';
 import * as fs from 'fs';
-import { autoChooseEngine } from './root';
+import { autoChooseEngine, parseScaffold } from './root';
+import { getRootFileText } from './subpage';
+import { getMinimalBlock } from './document';
 
 function isTex(document: vscode.TextDocument) {
   const extname = path.extname(document.fileName);
@@ -92,14 +94,19 @@ export function activate(context: vscode.ExtensionContext) {
 
         process.chdir(path.dirname(event.document.fileName));
 
-        const header = findHeader(event.document);
-        const changedBlock = findChangedBlockText(
-          event.document,
-          start.line,
-          end.line
-        );
+        // const header = findHeader(event.document);
+        // const changedBlock = findChangedBlockText(
+        //   event.document,
+        //   start.line,
+        //   end.line
+        // );
 
-        const liveText = `${header}\n${changedBlock}\n\\end{document}\n`;
+        // const liveText = `${header}\n${changedBlock}\n\\end{document}\n`;
+
+        const scaffold = parseScaffold(getRootFileText(event.document));
+        const liveText = scaffold.build(
+          getMinimalBlock(event.document, start.line, end.line)
+        );
 
         console.log('liveBlock: ', liveText);
         const engine = autoChooseEngine(liveText);
