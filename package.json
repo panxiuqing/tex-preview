@@ -3,7 +3,7 @@
   "publisher": "tialki",
   "displayName": "Tex Preview",
   "description": "tex quick preview",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "icon": "icon.png",
   "repository": {
     "type": "git",

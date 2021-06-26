@@ -48,9 +48,9 @@ export function getMinimalBlock(
 
       const lineText = document.lineAt(line).text;
       if (lineText.startsWith('\\begin')) {
+        env = lineText.match(ENV_REGEXP)?.[1] as string;
         firstBlockStarted = true;
         firstBlockStartLine = Math.min(line, startLine);
-        env = lineText.match(ENV_REGEXP)?.[1] as string;
         continue;
       }
     } else if (!firstBlockEnded) {

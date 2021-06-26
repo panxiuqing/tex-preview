@@ -92,7 +92,8 @@ export function activate(context: vscode.ExtensionContext) {
         }
         busy = true;
 
-        process.chdir(path.dirname(event.document.fileName));
+        const dirname = path.dirname(event.document.fileName);
+        process.chdir(dirname);
 
         // const header = findHeader(event.document);
         // const changedBlock = findChangedBlockText(
@@ -108,13 +109,18 @@ export function activate(context: vscode.ExtensionContext) {
           getMinimalBlock(event.document, start.line, end.line)
         );
 
-        console.log('liveBlock: ', liveText);
         const engine = autoChooseEngine(liveText);
 
         start = new vscode.Position(Infinity, Infinity);
         end = new vscode.Position(0, 0);
 
-        const basename = `live.${path.basename(event.document.fileName)}`;
+        const liveDir = path.join(dirname, '.live_dir');
+        if (!fs.existsSync(liveDir)) {
+          fs.mkdirSync(liveDir);
+        }
+        process.chdir(liveDir);
+        // const basename = `${path.basename(event.document.fileName)}`;
+        const basename = 'temp.tex';
         fs.writeFileSync(basename, liveText);
 
         const ps = spawn(engine, [basename]);
