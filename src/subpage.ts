@@ -9,9 +9,14 @@ export function parseRootFile(lineText: string) {
   return lineText.match(ROOT_FILE_REGEXP)?.[1];
 }
 
-export function getRootFileText(document: TextDocument) {
+export function getRootFilePath(document: TextDocument) {
   const firstLine = getFirstLine(document);
   const rootFilePath = parseRootFile(firstLine);
+  return rootFilePath;
+}
+
+export function getRootFileText(document: TextDocument) {
+  const rootFilePath = getRootFilePath(document);
   if (!rootFilePath) {
     return document.getText();
   }

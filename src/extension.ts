@@ -5,7 +5,7 @@ import * as path from 'path';
 import { spawn } from 'child_process';
 import * as fs from 'fs';
 import { autoChooseEngine, parseScaffold } from './root';
-import { getRootFileText } from './subpage';
+import { getRootFilePath, getRootFileText } from './subpage';
 import { getMinimalBlock } from './document';
 
 function isTex(document: vscode.TextDocument) {
@@ -114,13 +114,12 @@ export function activate(context: vscode.ExtensionContext) {
         start = new vscode.Position(Infinity, Infinity);
         end = new vscode.Position(0, 0);
 
-        const liveDir = path.join(dirname, '.live_dir');
-        if (!fs.existsSync(liveDir)) {
-          fs.mkdirSync(liveDir);
-        }
-        process.chdir(liveDir);
+        const rootFilePath = getRootFilePath(event.document) ?? '';
+        const rootDir = path.dirname(path.join(process.cwd(), rootFilePath));
+
+        process.chdir(rootDir);
         // const basename = `${path.basename(event.document.fileName)}`;
-        const basename = 'temp.tex';
+        const basename = 'live.main.tex';
         fs.writeFileSync(basename, liveText);
 
         const ps = spawn(engine, [basename]);
